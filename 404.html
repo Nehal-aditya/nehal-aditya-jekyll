@@ -1,0 +1,61 @@
+---
+layout: default
+title: "404: Page Not Found"
+permalink: /404.html
+searchable: false
+---
+
+<style>
+  .not-found-container {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+  .not-found-container h1 {
+    font-size: 8em;
+    margin: 0;
+    color: #ccc;
+    line-height: 1;
+  }
+  .not-found-container h2 {
+    font-size: 2em;
+    margin-top: 0;
+  }
+  .not-found-container .home-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 25px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  .recent-posts-heading {
+      margin-top: 40px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+  }
+</style>
+
+<div class="not-found-container">
+  <h1>404</h1>
+  <h2>Page Not Found</h2>
+  <p>Sorry, the page you were looking for doesn't seem to exist.</p>
+  <p>It might have been moved, deleted, or you may have mistyped the URL.</p>
+  
+  <p>You can try searching the site using the search bar in the header, or go back to the homepage.</p>
+  
+  <a href="{{ "/" | absolute_url }}" class="home-button">Go to Homepage 🏠</a>
+
+  <div class="recent-posts-heading">
+      <h3>Or, check out some of our recent posts:</h3>
+      <ul>
+        {% for post in site.posts limit:3 %}
+          <li>
+            <a href="{{ post.url | absolute_url }}">{{ post.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+  </div>
+</div>
