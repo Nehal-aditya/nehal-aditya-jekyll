@@ -1,0 +1,38 @@
+---
+---
+@import "minima";
+
+// Custom styles for the hamburger menu
+.site-nav {
+  .menu-icon {
+    display: none; // Hidden by default on large screens
+  }
+
+  @media screen and (max-width: 600px) {
+    position: relative;
+    .menu-icon {
+      display: block;
+      float: right;
+      width: 36px;
+      height: 26px;
+      line-height: 0;
+      padding-top: 10px;
+      text-align: center;
+    }
+
+    .trigger {
+      clear: both;
+      display: none; // Hide menu by default
+      &.active {
+        display: block; // Show when hamburger is clicked
+      }
+    }
+
+    .page-link {
+      display: block;
+      padding: 5px 10px;
+      margin-left: -10px;
+      text-align: right;
+    }
+  }
+}
