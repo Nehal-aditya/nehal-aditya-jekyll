@@ -1,0 +1,90 @@
+---
+layout: page
+title: Search
+permalink: /search/
+---
+<input type="text" id="search-input" placeholder="Search for posts..." style="width: 100%; padding: 10px; font-size: 1.2em; margin-bottom: 20px;">
+
+<ul id="search-results"></ul>
+
+<script src="https://cdn.jsdelivr.net/gh/nextapps-de/flexsearch@0.7.31/dist/flexsearch.bundle.js"></script>
+
+<script>
+  // Wait until the DOM is fully loaded
+  document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('search-results');
+    let index;
+    let documents;
+
+    // 1. Fetch the search data and initialize the search index
+    fetch('{{ "/search.json" | absolute_url }}')
+      .then(response => response.json())
+      .then(docs => {
+        documents = docs;
+        // Initialize FlexSearch
+        index = new FlexSearch.Document({
+          document: {
+            id: "url", // Use the URL as a unique ID
+            index: ["title", "content"], // Fields to search
+          },
+          tokenize: "forward"
+        });
+        // Add all documents to the index
+        documents.forEach(doc => index.add(doc));
+        searchInput.placeholder = "Search for posts...";
+        searchInput.disabled = false;
+      })
+      .catch(error => {
+        console.error('Error fetching search data:', error);
+        searchInput.placeholder = "Failed to load search.";
+      });
+
+    // Disable input until the index is loaded
+    searchInput.disabled = true;
+    searchInput.placeholder = "Loading search index...";
+
+    // 2. Add an event listener for user input
+    searchInput.addEventListener('input', function () {
+      const query = this.value;
+      if (!query || !index) {
+        resultsContainer.innerHTML = '';
+        return;
+      }
+
+      // 3. Perform the search
+      const results = index.search(query, { enrich: true });
+
+      // 4. Display the results
+      resultsContainer.innerHTML = ''; // Clear previous results
+      if (results.length === 0 || results[0].result.length === 0) {
+        resultsContainer.innerHTML = '<li>No results found.</li>';
+        return;
+      }
+
+      results[0].result.forEach(result => {
+        const doc = result.doc;
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${doc.url}"><h3>${doc.title}</h3></a><p>${doc.date}</p>`;
+        resultsContainer.appendChild(li);
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Optional: Some basic styling for the results */
+  #search-results li {
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #eee;
+  }
+  #search-results h3 {
+    margin: 0 0 5px 0;
+  }
+  #search-results p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+  }
+</style>
