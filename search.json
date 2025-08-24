@@ -2,13 +2,13 @@
 layout: null
 ---
 [
-  {% for post in site.posts %}
+  {%- assign all_pages = site.html_pages | where_exp: "item", "item.searchable != false" -%}
+  {%- for page in all_pages -%}
     {
-      "title": "{{ post.title | escape }}",
-      "url": "{{ post.url | absolute_url }}",
-      "date": "{{ post.date | date_to_string }}",
-      "content": {{ post.content | strip_html | strip_newlines | jsonify }}
+      "title": {{ page.title | jsonify }},
+      "url": {{ page.url | absolute_url | jsonify }},
+      "content": {{ page.content | strip_html | strip_newlines | jsonify }}
     }
-    {% unless forloop.last %},{% endunless %}
-  {% endfor %}
+    {%- unless forloop.last -%},{% endunless -%}
+  {%- endfor -%}
 ]
