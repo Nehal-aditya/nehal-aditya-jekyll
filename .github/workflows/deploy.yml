@@ -1,0 +1,24 @@
+name: Build and Deploy Jekyll Site
+
+on:
+  push:
+    branches:
+      - main # Or whatever your default branch is
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Uses the official Jekyll action to build your site
+      - name: Build Jekyll site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      # Uses the official deploy action to upload your site
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
